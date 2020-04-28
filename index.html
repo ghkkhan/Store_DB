@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="index.css">
+        <meta charset="utf-8">
+        <title>Store Database</title>
+        
+    </head>
+    <body>
+        <form><!-- Drop down menu -->
+            <select id="selectionForm" onchange="selectForm()">
+                <option disabled selected>-Select a Function-</option>
+                <option value="productBuy">Buy Product</option>
+                <option value="restock">Restock Shelves</option>
+                <option value="resupply">Resupply Product</option>
+                <option value="revenue">Calculate Product Revenue</option>
+            </select>
+        </form>
+        <form id="buyProductForm" class="functionForm" method="POST" action="database.php" target="_blank"><!-- Form for buying a product-->
+            <input type="hidden" name="functionName" value="0">
+            <label for="prodID">Product ID</label>
+            <input type="number" min="0" name="prodID">
+            <label for="customerID">Customer ID</label>
+            <input type="text" name="customerID">
+            <input type="submit">
+        </form>
+        <form id="restockForm" class="functionForm" method="POST" action="database.php" target="_blank">
+            <input type="hidden" name="functionName" value="1">
+            <label for="prodID">Product ID</label>
+            <input type="number" min="0" name="prodID">
+        </form>
+        <form id="resupplyForm" class="functionForm" method="POST" action="database.php" target="_blank">
+            <input type="hidden" name="functionName" value="2">
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" min="0">
+            <label for="pname">Product:</label>
+            <input type="text" name="pname">
+            <label for="sname">Supplier:</label>
+            <input type="text" name="sname">
+        </form>
+        <form id="revenueForm" class="functionForm" method="POST" action="database.php" target="_blank">
+            <input type="hidden" name="functionName" value="3">
+            <label for="saleDate">Sale Date:</label>
+            <input type="date" name="saleDate">
+            <label for="priceThreshold">Price:</label>
+            <input type="number" name="priceThreshold">
+        </form>
+        <script>
+            function selectForm(){
+                //hide all forms here before making selected one visible
+                var forms = document.getElementsByClassName("functionForm");
+                for(var i=0;i<forms.length;i++){
+                    forms[i].style.display = "none";
+                }
+
+                var selectionForm = document.getElementById("selectionForm");
+                if(selectionForm.value == "productBuy"){
+                    document.getElementById("buyProductForm").style.display = "block";
+                }
+                if(selectionForm.value == "restock"){
+                    document.getElementById("restockForm").style.display = "block";
+                }
+                if(selectionForm.value == "resupply"){
+                    document.getElementById("resupplyForm").style.display = "block";
+                }
+                if(selectionForm.value == "revenue"){
+                    document.getElementById("revenueForm").style.display = "block";
+                }
+            }
+        </script>
+    </body>
+</html>

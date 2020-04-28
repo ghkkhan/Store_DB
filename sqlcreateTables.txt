@@ -1,0 +1,74 @@
+// Table creation
+
+CREATE TABLE Product (
+    ID UNSIGNED INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Category VARCHAR(255),
+    OnShelf UNSIGNED INT,
+    InStorage UNSIGNED INT
+);
+
+CREATE TABLE Supplier (
+    Name VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE SuppliedBy (
+    ProdID UNSIGNED INT NOT NULL,
+    SupplierName VARCHAR(255) NOT NULL, 
+    Price FLOAT,
+    FOREIGN KEY (ProdID) REFERENCES Product(ID),
+    FOREIGN KEY (SupplierName) REFERENCES Supplier(Name)
+);
+
+CREATE TABLE Customer (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    DOB DATE,
+    Address VARCHAR(255),
+    FirstName VARCHAR(255),
+    MiddleName VARCHAR(255),
+    LastName VARCHAR(255),
+    MemberStatus BOOLEAN DEFAULT FALSE
+);
+CREATE TABLE PhoneNumber (
+    PhoneNO VARCHAR(16),
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(ID)
+);
+
+CREATE TABLE Section (
+    Number INT PRIMARY KEY,
+    Name VARCHAR(255)
+);
+
+CREATE TABLE Employee (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    JobTitle VARCHAR(255),
+    Name VARCHAR(255),
+    Salary FLOAT
+);
+
+CREATE TABLE Specialization (
+    EmpID INT NOT NULL,
+    SectionNo INT,
+    FOREIGN KEY (EmpID) REFERENCES Employee(ID),
+    FOREIGN KEY (SectionNo) REFERENCES Section(Number)
+);
+
+CREATE TABLE Purchase (
+    CustomerID INT NOT NULL,
+    ProdID INT NOT NULL,
+    SellDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(ID),
+    FOREIGN KEY (ProdID) REFERENCES Product(ID)
+);
+
+CREATE TABLE Location (
+    SectionNo INT,
+    ProdID UNSIGNED INT NOT NULL,
+    FOREIGN KEY (SectionNo) REFERENCES Section(Number),
+    FOREIGN KEY (ProdID) REFERENCES Product(ID)
+);
+
+
+INSERT INTO Product (ID, Name, Price, Category, Onshelf, Instorage) VALUES
+(01, "TP", "House stuff", "0", "0"),(02, "Water", "Survival" , 10000,200000);
