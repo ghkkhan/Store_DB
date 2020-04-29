@@ -1,7 +1,33 @@
 .functionForm {
     display: none;
-/*
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+.functionForm > * {
+    margin-bottom: 2px;
+}
+#container {
+    width: 50%;
+    height: 200px;
     border: 2px solid red;
-    border-radius: 10px;
-*/
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 10px;
+}
+#miscContainer {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    text-align: center;
+}
+#miscContainer form {
+    display: inline;
+}
+#header {
+    text-align: center;
 }

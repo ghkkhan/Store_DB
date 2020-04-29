@@ -7,47 +7,87 @@
         
     </head>
     <body>
-        <form><!-- Drop down menu -->
-            <select id="selectionForm" onchange="selectForm()">
-                <option disabled selected>-Select a Function-</option>
-                <option value="productBuy">Buy Product</option>
-                <option value="restock">Restock Shelves</option>
-                <option value="resupply">Resupply Product</option>
-                <option value="revenue">Calculate Product Revenue</option>
-            </select>
-        </form>
-        <form id="buyProductForm" class="functionForm" method="POST" action="database.php" target="_blank"><!-- Form for buying a product-->
-            <input type="hidden" name="functionName" value="0">
-            <label for="prodID">Product ID</label>
-            <input type="number" min="0" name="prodID">
-            <label for="customerID">Customer ID</label>
-            <input type="text" name="customerID">
-            <input type="submit">
-        </form>
-        <form id="restockForm" class="functionForm" method="POST" action="database.php" target="_blank">
-            <input type="hidden" name="functionName" value="1">
-            <label for="prodID">Product ID</label>
-            <input type="number" min="0" name="prodID">
-            <input type="submit">
-        </form>
-        <form id="resupplyForm" class="functionForm" method="POST" action="database.php" target="_blank">
-            <input type="hidden" name="functionName" value="2">
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity" min="0">
-            <label for="pname">Product:</label>
-            <input type="text" name="pname">
-            <label for="sname">Supplier:</label>
-            <input type="text" name="sname">
-            <input type="submit">
-        </form>
-        <form id="revenueForm" class="functionForm" method="POST" action="database.php" target="_blank">
-            <input type="hidden" name="functionName" value="3">
-            <label for="saleDate">Sale Date:</label>
-            <input type="date" name="saleDate">
-            <label for="priceThreshold">Price:</label>
-            <input type="number" name="priceThreshold">
-            <input type="submit">
-        </form>
+        <h1 id="header">Store Database:</h1>
+        <div id="container"><!-- Container for drop down menu and forms with input -->
+            <form><!-- Drop down menu -->
+                <select id="selectionForm" onchange="selectForm()">
+                    <option disabled selected>-Select a Function-</option>
+                    <option value="productBuy">Buy Product</option>
+                    <option value="revenue">Calculate Product Revenue</option>
+                    <option value="changeMember">Change Customer Member Status</option>
+                    <option value="minSupplier">Find cheapest supplier for a product</option>
+                    <option value="restock">Restock Shelves</option>
+                    <option value="resupply">Resupply Product</option>
+                </select>
+            </form>
+            <form id="buyProductForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="0">
+                <label for="prodID">Product ID:</label>
+                <input type="number" min="0" name="prodID" required><br>
+                <label for="customerID">Customer ID:</label>
+                <input type="number" min="0" name="customerID" required><br>
+                <input type="submit">
+            </form>
+            <form id="restockForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="1">
+                <label for="prodID">Product ID:</label>
+                <input type="number" min="0" name="prodID" required><br>
+                <label for="critNum">Critical Restock Number:</label>
+                <input type="number" min="0" name="critNum" required><br> 
+                <input type="submit">
+            </form>
+            <form id="resupplyForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="2">
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" min="0" required><br>
+                <label for="pname">Product:</label>
+                <input type="text" name="pname" required><br>
+                <label for="sname">Supplier:</label>
+                <input type="text" name="sname" required><br>
+                <input type="submit">
+            </form>
+            <form id="revenueForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="3">
+                <label for="saleDate">Sale Date:</label>
+                <input type="date" name="saleDate" required><br>
+                <label for="priceThreshold">Price:</label>
+                <input type="number" name="priceThreshold" required><br>
+                <input type="submit">
+            </form>
+            <form id="changeMemberForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="7">
+                <label for="customerID">Customer ID:</label>
+                <input type="number" name="customerID" required><br>
+                <label for="statusChange">Status:</label>
+                <select name="statusChange">
+                    <option value="makeMember">Member</option>
+                    <option value="makeNotMember">Not member</option><br>
+                </select>
+                <input type="submit">
+            </form>
+            <form id="minSupplierForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="8">
+                <label for="prodID">Product ID:</label>
+                <input type="number" name="prodID" min="0" required>
+                <input type="submit">
+            </form>
+        </div>
+
+        <div id="miscContainer"><!-- Container for miscellaneous functions (no user input) -->
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="4">
+                <input type="submit" value="Employee Specializations">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="5">
+                <input type="submit" value="Member Status">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="6">
+                <input type="submit" value="Get Low Stock">
+            </form>
+        </div>
+
         <script>
             function selectForm(){
                 //hide all forms here before making selected one visible
@@ -68,6 +108,12 @@
                 }
                 if(selectionForm.value == "revenue"){
                     document.getElementById("revenueForm").style.display = "block";
+                }
+                if(selectionForm.value == "changeMember"){
+                    document.getElementById("changeMemberForm").style.display = "block";
+                }
+                if(selectionForm.value == "minSupplier"){
+                    document.getElementById("minSupplierForm").style.display = "block";
                 }
             }
         </script>

@@ -90,11 +90,11 @@ INSERT INTO Supplier(Name) VALUES
 ("Start Bucks");
 
 INSERT INTO Customer(ID, DOB, Address, FirstName, MiddleName, LastName, MemberStatus) VALUES
-(1, 1/1/2000, "666 Dev Street", "John", "Henry", "Smith", NULL);
-(2, 5/23/1963, "321 Old Street", "John","M", "Oldman", TRUE);
-(3, 11/11/2015, "321 Old Street", "Jim", "A", "Oldman", "FALSE"),
-(4, 1/12/1999, "435 South Street", "Jo'hn", "Allen", "Wyatt", TRUE),
-(5,1/12/1999,"North-East Street", "Isaac", "Smith", "Smith", TRUE);
+(1, "2000-1-1", "666 Dev Street", "John", "Henry", "Smith", NULL),
+(2, "1963-5-23", "321 Old Street", "John","M", "Oldman", TRUE),
+(3, "2015-11-11", "321 Old Street", "Jim", "A", "Oldman", "FALSE"),
+(4, "1999-11-11", "435 South Street", "Jo'hn", "Allen", "Wyatt", TRUE),
+(5,"1999-1-12","North-East Street", "Isaac", "Smith", "Smith", TRUE);
 
 INSERT INTO PhoneNumber(PhoneNO, CustomerID) VALUES
 (19080706051, 1),
