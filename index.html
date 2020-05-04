@@ -12,10 +12,13 @@
             <form><!-- Drop down menu -->
                 <select id="selectionForm" onchange="selectForm()">
                     <option disabled selected>-Select a Function-</option>
+                    <option value="addCustomer">Add a customer</option>
+                    <option value="addEmployee">Add an Employee</option>
                     <option value="productBuy">Buy Product</option>
                     <option value="revenue">Calculate Product Revenue</option>
                     <option value="changeMember">Change Customer Member Status</option>
                     <option value="minSupplier">Find cheapest supplier for a product</option>
+                    <option value="removeEmployee">Remove an employee</option>
                     <option value="restock">Restock Shelves</option>
                     <option value="resupply">Resupply Product</option>
                 </select>
@@ -40,10 +43,8 @@
                 <input type="hidden" name="functionName" value="2">
                 <label for="quantity">Quantity:</label>
                 <input type="number" name="quantity" min="0" required><br>
-                <label for="pname">Product:</label>
+                <label for="pname">Product Name:</label>
                 <input type="text" name="pname" required><br>
-                <label for="sname">Supplier:</label>
-                <input type="text" name="sname" required><br>
                 <input type="submit">
             </form>
             <form id="revenueForm" class="functionForm" method="POST" action="database.php" target="_blank">
@@ -62,13 +63,49 @@
                 <select name="statusChange">
                     <option value="makeMember">Member</option>
                     <option value="makeNotMember">Not member</option><br>
-                </select>
+                </select><br>
                 <input type="submit">
             </form>
             <form id="minSupplierForm" class="functionForm" method="POST" action="database.php" target="_blank">
                 <input type="hidden" name="functionName" value="8">
                 <label for="prodID">Product ID:</label>
                 <input type="number" name="prodID" min="0" required>
+                <input type="submit">
+            </form>
+            <form id="addCustomerForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="9">
+                <label for="DOB">Date of Birth:</label>
+                <input type="date" name="DOB" required><br>
+                <label for="address">Address:</label>
+                <input type="text" name="address" required><br>
+                <label for="firstName">First name:</label>
+                <input type="text" name="firstName" required><br>
+                <label for="middleName">Middle name:</label>
+                <input type="text" name="middleName" required><br>
+                <label for="lastName">Last name:</label>
+                <input type="text" name="lastName" required><br>
+                <select name="memberStatus">
+                    <option value="true">Member</option>
+                    <option value="false">Nonmember</option>
+                </select><br>
+                <input type="submit">
+            </form>
+            <form id="addEmployeeForm" class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="10">
+                <label for="jobTitle">Job Title:</label>
+                <input type="text" name="jobTitle" required><br>
+                <label for="Name">Employee Name: </label>
+                <input type="text" name="empName" required><br>
+                <label for="salary">Salary: </label>
+                <input type="number" name="salary" min="0" required><br>
+                
+                <input type="submit">
+            </form>
+            <form id="removeEmployeeForm"  class="functionForm" method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="11">
+                <label for="Employee ID">Employee ID: </label>
+                <input type="number" name="deleteID" min="0" required>
+
                 <input type="submit">
             </form>
         </div>
@@ -85,6 +122,22 @@
             <form method="POST" action="database.php" target="_blank">
                 <input type="hidden" name="functionName" value="6">
                 <input type="submit" value="Get Low Stock">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="12">
+                <input type="submit" value="Show Products">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="13">
+                <input type="submit" value="Show Employees">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="14">
+                <input type="submit" value="Show Customers">
+            </form>
+            <form method="POST" action="database.php" target="_blank">
+                <input type="hidden" name="functionName" value="15">
+                <input type="submit" value="Show Suppliers">
             </form>
         </div>
 
@@ -114,6 +167,15 @@
                 }
                 if(selectionForm.value == "minSupplier"){
                     document.getElementById("minSupplierForm").style.display = "block";
+                }
+                if(selectionForm.value == "addCustomer"){
+                    document.getElementById("addCustomerForm").style.display = "block";
+                }
+                if(selectionForm.value == "addEmployee"){
+                    document.getElementById("addEmployeeForm").style.display = "block";
+                }
+                if(selectionForm.value == "removeEmployee"){
+                    document.getElementById("removeEmployeeForm").style.display = "block";
                 }
             }
         </script>

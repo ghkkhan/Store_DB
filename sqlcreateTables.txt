@@ -111,7 +111,10 @@ INSERT INTO Section(Number,Name) VALUES
 (24, Alcohol);
 
 INSERT INTO Employee(ID, JobTitle, Name, Salary) VALUES
-(10001, Cashier, "John Greaves"	, 40000),
+(1, Cashier, "Ethel Godiva"	, 40000),
+(2, Cashier, "Ethan Waters"	, 40000),
+(3, Cashier, "Jack Black"	, 40000),
+(4, Cashier, "Nathan Blob"	, 40000),
 (10308, Stock Handler, "Michael Corleone", 40000),
 (10002, Stock Handler, "Elly Whitehouse", 40000),
 (10003, General Staff, "Sue Irwin", 43000),

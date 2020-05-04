@@ -15,8 +15,11 @@
     /* Using a POST request, determine which 
        function needs to be ran and printed out */
     $result = null;
+    $add = false;
+    $delete = false;
     switch($_POST["functionName"]) {
         case "0" :
+            $add=True;
             $result = buyProduct($mysqli);
             break;
         case "1" :
@@ -43,18 +46,48 @@
         case "8":
             $result = minSupplier($mysqli);
             break;
-    }
+        case "9" :
+            $add=True;
+            $result = addCustomer($mysqli);
+            break;
+        case "10" :
+            $add=True;
+            $result = addEmployee($mysqli);
+            break;
+        case "11" :
+            $delete = true;
+            $result = removeEmployee($mysqli);
+            break;
+        case "12":
+            $result = showProducts($mysqli);
+            break;
+        case "13":
+            $result = showEmployees($mysqli);
+            break;
+        case "14" :
+            $result = showCustomers($mysqli);
+            break;
+        case "15":
+            $result = showSuppliers($mysqli);
+            break;
+        }
 
 //    $query = "SELECT * FROM Product";
 //    $result = $mysqli->query($query);
     
     /* Print Out the Result if there are any */
-    if ($result && $result->num_rows > 0) {
+    if($add && !$result) {
+        $html = "<p>Unable to add the tuple</p>";
+    }
+    else if($delete && !$result){
+        $html = "<p>Unable to delete the tuple</p>";
+    }
+    else if ($result && $result->num_rows > 0) {
         $html = createTable($result);
     } else {
         $html = "<p>No results found.</p>";
     }
-
+    
     if($result) {
         $result->close();
     }
@@ -89,7 +122,7 @@
         $crit_NO = $_POST["critNum"];
 
         $res = $mysqli -> query("SELECT OnShelf,InStorage FROM Product 
-                                 WHERE ID = prodID ");
+                                 WHERE ID = $prod_ID ");
         $row = $res -> fetch_assoc();
         if(count($row) == 0) {
             return NULL;// Product with specified ID doesn't exist
@@ -97,40 +130,41 @@
         $numberOnShelf = $row['OnShelf'];
         $numberInStorage = $row['InStorage'];
         if ($crit_NO > $numberInStorage) { // not enough in the storage...
-            return NULL;
+            echo "<p>Not Enough in Storage</p>";
+            exit;
         }
         $numberInStorage -= $crit_NO;
         $numberOnShelf += $crit_NO;
         $mysqli -> query(   "UPDATE Product 
-                            SET OnShelf = $numberOnShelf,
-                            SET InStorage = $numberInStorage 
-                            where ID = prodID" );
-        $result = $mysqli -> query("SELECT * FROM Purchase WHERE CustomerID = $cust_ID");
+                            SET OnShelf = $numberOnShelf, InStorage = $numberInStorage 
+                            WHERE ID = $prod_ID" );
+        $result = $mysqli -> query("SELECT * FROM Product WHERE ID = $prod_ID");
         return $result;
     }
 
     function resupply($mysqli) {
         $quantity = $_POST["quantity"];
         $pname = $_POST["pname"];
-        $sname = $_POST["sname"];
         
-        $res = $mysqli -> query("SELECT InStorage FROM Product WHERE Name = $pname ");
+        $res = $mysqli -> query("SELECT InStorage FROM Product WHERE Name = '$pname' ");
+        if(!$res) {
+            return NULL;
+        }
         $row = $res -> fetch_assoc();
         if(count($row) == 0) {
             return NULL;
         }
         $prodInStore = $row['InStorage'];
         $prodInStore += $quantity;
-        $mysqli -> query(" UPDATE Product SET InStorage = $prodInStore WHERE Name = $pname ");
+        $mysqli -> query(" UPDATE Product SET InStorage = $prodInStore WHERE Name = '$pname' ");
 
-        $query = "SELECT * FROM Purchase WHERE Name = $pname";
-        $result = $mysqli->query($query);
+        $result = $mysqli->query("SELECT * FROM Product WHERE Name = '$pname'");
         return $result;
     }
 
     function revenue($mysqli) {
         $phpDate = $_POST["saleDate"];
-        $sqlDate = $newdate = date('Ymd', strtotime($phpDate));
+        $sqlDate = date('Ymd', strtotime($phpDate));
         $price = $_POST["priceThreshold"];
         $result = $mysqli->query("  SELECT ProdID, SUM(Price) AS Revenue
                                     FROM Purchase Pu, Product Pr 
@@ -175,13 +209,13 @@
     }
 
     function changeCustomerStatus($mysqli){
-        $statusChange = $_POST["statusChange"];
+        $statusChange = $_POST["statusChange"] == "makeMember" ? 1 : 0;
         $cust_ID = $_POST["customerID"];
         $result = $mysqli->query(
             "UPDATE Customer SET MemberStatus = $statusChange
-            WHERE CustomerID = $cust_ID"
+            WHERE ID = $cust_ID"
         );//not sure if this works
-        return $result;
+        return $mysqli->query("SELECT * FROM Customer WHERE ID=$cust_ID");
     }
 
     function minSupplier($mysqli) {
@@ -193,6 +227,70 @@
         return $result;
     }
 
+    function addCustomer($mysqli){
+        $DOB = $_POST['DOB'];
+        $first = $_POST['firstName'];
+        $middle = $_POST['middleName'];
+        $last = $_POST['lastName'];
+        $address = $_POST['address'];
+        $memberStatus = $_POST['memberStatus'] == "true" ? 1 : 0;
+        $sqlDate= date('Ymd', strtotime($DOB));
+
+        $result = $mysqli->query(
+            " INSERT INTO Customer(DOB,Address,FirstName,MiddleName,LastName,MemberStatus) VALUES
+            ('$sqlDate','$address','$first','$middle','$last','$memberStatus')
+        ");
+        if(!$result){
+            return null;
+        }
+        return $mysqli->query("SELECT * FROM Customer WHERE FirstName='$first' AND LastName='$last' AND Address='$address'");
+    }
+    
+    function addEmployee($mysqli) {
+        $jobTitle = $_POST['jobTitle'];
+        $name = $_POST['empName'];
+        $salary = $_POST['salary'];
+
+        $result = $mysqli->query("INSERT INTO Employee(JobTitle, Name, Salary) VALUES ('$jobTitle', '$name', $salary);");
+        if(!$result) {
+            return null;   
+        }
+        return $mysqli->query("SELECT * FROM Employee WHERE Name='$name'");
+        
+    }
+    
+    function removeEmployee($mysqli) {
+        $deleteID = $_POST['deleteID'];
+        $res =  $mysqli -> query( "SELECT * FROM Employee WHERE ID = $deleteID ");
+        if(count($res->fetch_assoc()) == 0) {
+            return null;
+        }
+        $result = $mysqli -> query( "DELETE FROM Employee WHERE ID = $deleteID ");
+        if(!$result) {
+            return null;
+        }
+        $result =  $mysqli -> query( " DELETE FROM Specialization WHERE EmpID = $deleteID");
+        $result = $mysqli -> query(" SELECT * FROM Employee ");
+        return $result;
+
+    }
+
+    function showProducts($mysqli) {
+        return $mysqli->query("SELECT * FROM Product");
+    }
+
+    function showEmployees($mysqli) {
+        return $mysqli->query("SELECT * FROM Employee");
+    }
+    function showCustomers($mysqli) {
+        return $mysqli->query("SELECT * FROM Customer");
+    }
+
+    function showSuppliers($mysqli) {
+        return $mysqli->query("SELECT * FROM Supplier");
+    }
+
+    
     /* Creates a neat table from the result */
     function createTable($result) {
         $table = "<table class='table table-bordered'>";
@@ -220,6 +318,8 @@
         $table .= "</table>";
         return $table;
     }
+
+
 ?>
 
 <html lang="en">
@@ -232,6 +332,6 @@
         
     </head>
     <body>
-        <?php echo $html ?>
+        <?php echo $html; ?>
     </body>
 </html>
